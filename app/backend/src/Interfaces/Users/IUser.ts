@@ -1,5 +1,5 @@
-export default interface IUserModelSequelize {
-  id?: number,
+export default interface IUser {
+  id: number,
   username: string,
   role: string,
   email: string,
