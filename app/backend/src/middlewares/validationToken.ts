@@ -3,11 +3,16 @@ import JWT from '../utils/JWT';
 
 class Validation {
   static validateToken(req: Request, res: Response, next: NextFunction): Response | void {
-    const token = req.headers.authorization;
-    if (!token) {
+    const tokenBearer = req.headers.authorization;
+
+    if (!tokenBearer) {
       return res.status(401).json({ message: 'Token not found' });
     }
+    const token = tokenBearer?.split(' ')[1];
+
+    console.log(token);
     const validToken = JWT.verify(token);
+
     if (validToken === 'Token must be a valid Token') {
       return res.status(401).json({ message: validToken });
     }

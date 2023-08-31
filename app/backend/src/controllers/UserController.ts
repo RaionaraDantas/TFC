@@ -15,4 +15,6 @@ export default class UserController {
     }
     return res.status(200).json(serviceResponse.data);
   }
+
+  // public async verifyRole(req: Request, res: Response)
 }
