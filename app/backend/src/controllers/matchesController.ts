@@ -10,4 +10,11 @@ export default class MatchesController {
     const serviceResponse = await this.matchesService.findAllMatches();
     return res.status(200).json(serviceResponse.data);
   }
+
+  public async findAllByQuery(req: Request, res: Response) {
+    const { q } = req.query;
+
+    const serviceResponse = await this.matchesService.findAllByQuery(q as string);
+    return res.status(200).json(serviceResponse.data);
+  }
 }

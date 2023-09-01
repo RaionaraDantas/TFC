@@ -15,4 +15,12 @@ export default class MatchesModel implements IMatchesModel {
     });
     return matches;
   }
+
+  public async findAllByQuery(q: string): Promise<IMatches[]> {
+    return this.model.findAll({
+      where: {
+        inProgress: q,
+      },
+    });
+  }
 }
