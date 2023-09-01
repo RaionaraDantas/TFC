@@ -30,7 +30,6 @@ export default {
         type: DataTypes.INTEGER,
         field: 'in_progress',
       }
-
     });
   },
   down(queryInterface: QueryInterface) {

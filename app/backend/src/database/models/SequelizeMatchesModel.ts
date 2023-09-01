@@ -26,9 +26,15 @@ Matches.init({
     primaryKey: true,
     autoIncrement: true,
   },
-  homeTeamId: DataTypes.INTEGER,
+  homeTeamId: {
+    type: DataTypes.INTEGER,
+    // field: 'home_team_id',
+  },
   homeTeamGoals: DataTypes.INTEGER,
-  awayTeamId: DataTypes.INTEGER,
+  awayTeamId: {
+    type: DataTypes.INTEGER,
+    // field: 'away_team_id',
+  },
   awayTeamGoals: DataTypes.INTEGER,
   inProgress: DataTypes.INTEGER,
 }, {
