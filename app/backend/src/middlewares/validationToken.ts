@@ -8,14 +8,23 @@ class Validation {
     if (!tokenBearer) {
       return res.status(401).json({ message: 'Token not found' });
     }
-    const token = tokenBearer?.split(' ')[1];
+    const token = tokenBearer.split(' ')[1];
 
     console.log(token);
-    const validToken = JWT.verify(token);
 
-    if (validToken === 'Token must be a valid Token') {
+    const validToken = JWT.verify(token);
+    req.body.user = validToken;
+
+    console.log(validToken);
+
+    if (validToken === 'Token must be a valid token') {
       return res.status(401).json({ message: validToken });
     }
+    // try {
+
+    // } catch (error) {
+
+    // }
     next();
   }
 

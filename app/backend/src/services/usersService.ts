@@ -20,4 +20,13 @@ export default class UsersService {
     const token = JWT.sign({ email: data.email });
     return { status: 'SUCCESSFUL', data: { token } };
   }
+
+  public async verifyRole(email: string): Promise<ServiceResponseType<string>> {
+    const user = await this.userModel.findByEmail(email);
+    if (!user) {
+      return { status: 'UNAUTHORIZED', data: { message: 'Invalid email' } };
+    }
+    return { status: 'SUCCESSFUL', data: user.role };
+    // return user.role as string;
+  }
 }
