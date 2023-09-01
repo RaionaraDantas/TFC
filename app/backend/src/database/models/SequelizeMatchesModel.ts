@@ -33,13 +33,14 @@ Matches.init({
   inProgress: DataTypes.INTEGER,
 }, {
   sequelize: db,
-  modelName: 'User',
-  tableName: 'users',
+  modelName: 'Matches',
+  tableName: 'matches',
   timestamps: false,
+  underscored: true,
 });
 
-Teams.hasMany(Matches, { foreignKey: 'home_team_id' });
-Teams.hasMany(Matches, { foreignKey: 'away_team_id' });
+// Teams.hasMany(Matches, { foreignKey: 'home_team_id' });
+// Teams.hasMany(Matches, { foreignKey: 'away_team_id' });
 
 Matches.belongsTo(Teams, { foreignKey: 'home_team_id', as: 'homeTeam' });
 Matches.belongsTo(Teams, { foreignKey: 'away_team_id', as: 'awayTeam' });
