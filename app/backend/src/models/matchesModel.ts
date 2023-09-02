@@ -18,8 +18,6 @@ export default class MatchesModel implements IMatchesModel {
   }
 
   public async findAllByQuery(inProgress: boolean): Promise<IMatches[]> {
-    console.log('CHEGUEI AQUI!!!!!');
-
     // const inProgressMatche = inProgress === 'true';
 
     const returnInProgressMatche = await this.model.findAll({
@@ -37,6 +35,17 @@ export default class MatchesModel implements IMatchesModel {
   public async finishMatch(id: number) {
     await this.model.update(
       { inProgress: 0 },
+      { where: { id } },
+    );
+  }
+
+  public async updateMatch(
+    id: number,
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+  ) {
+    await this.model.update(
+      { homeTeamGoals, awayTeamGoals },
       { where: { id } },
     );
   }

@@ -24,4 +24,10 @@ export default class MatchesService {
     await this.matchesModel.finishMatch(id);
     return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
   }
+
+  public async updateMatch(id: number, homeTeamGoals: number, awayTeamGoals: number):
+  Promise<ServiceResponseSuccessful<FinishMatch>> {
+    await this.matchesModel.updateMatch(id, homeTeamGoals, awayTeamGoals);
+    return { status: 'SUCCESSFUL', data: { message: 'Gols da partida atualizados' } };
+  }
 }

@@ -11,5 +11,5 @@ export type ServiceResponseError = {
 export type ServiceResponseType<T> = ServiceResponseSuccessful<T> | ServiceResponseError;
 
 export type FinishMatch = {
-  message: 'Finished',
+  message: 'Finished' | 'Gols da partida atualizados',
 };
