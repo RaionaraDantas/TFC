@@ -6,35 +6,31 @@ import IMatchesModel from '../Interfaces/Matches/IMatchesModel';
 export default class MatchesModel implements IMatchesModel {
   private model = SequelizeMatchesModel;
 
-  public async findAllMatches(q: string): Promise<IMatches[]> {
+  public async findAllMatches(): Promise<IMatches[]> {
     const matches = await this.model.findAll({
       include: [
         { model: SequelizeTeamsModel, as: 'homeTeam', attributes: { exclude: ['id'] } },
         { model: SequelizeTeamsModel, as: 'awayTeam', attributes: { exclude: ['id'] } },
       ],
     });
-    console.log(matches);
+    // console.log(matches);
     return matches;
   }
 
-  public async findAllByQuery(q: string): Promise<IMatches[]> {
+  public async findAllByQuery(inProgress: boolean): Promise<IMatches[]> {
     console.log('CHEGUEI AQUI!!!!!');
-    const associate = {
-      attributes: { exclude: ['home_team_id', 'away_team_id'] },
-      include: [
-        { all: true, attributes: { exclude: ['id'] } },
-      ],
-    };
 
-    const inProgressMatche = q === 'true';
+    // const inProgressMatche = inProgress === 'true';
 
     const returnInProgressMatche = await this.model.findAll({
       where: {
-        inProgress: inProgressMatche,
+        inProgress,
       },
-      // attributes: { exclude: ['home_team_id', 'away_team_id'] },
+      include: [
+        { model: SequelizeTeamsModel, as: 'homeTeam', attributes: ['teamName'] },
+        { model: SequelizeTeamsModel, as: 'awayTeam', attributes: ['teamName'] },
+      ],
     });
-    console.log(returnInProgressMatche);
     return returnInProgressMatche;
   }
 }
