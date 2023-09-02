@@ -1,7 +1,7 @@
 import {
   FinishMatch, ServiceResponseSuccessful, ServiceResponseType,
 } from '../Interfaces/ServiceResponseType';
-import IMatches from '../Interfaces/Matches/IMatches';
+import IMatches, { NewEntity } from '../Interfaces/Matches/IMatches';
 import IMatchesModel from '../Interfaces/Matches/IMatchesModel';
 import MatchesModel from '../models/matchesModel';
 
@@ -29,5 +29,11 @@ export default class MatchesService {
   Promise<ServiceResponseSuccessful<FinishMatch>> {
     await this.matchesModel.updateMatch(id, homeTeamGoals, awayTeamGoals);
     return { status: 'SUCCESSFUL', data: { message: 'Gols da partida atualizados' } };
+  }
+
+  public async createMatch(body: NewEntity<IMatches>):
+  Promise<ServiceResponseSuccessful<IMatches>> {
+    const newMatch = await this.matchesModel.createMatch(body);
+    return { status: 'SUCCESSFUL', data: newMatch };
   }
 }

@@ -4,5 +4,7 @@ export default interface IMatches {
   homeTeamGoals: number;
   awayTeamId: number;
   awayTeamGoals: number;
-  inProgress: number;
+  inProgress: boolean;
 }
+
+export type NewEntity<T> = Omit<T, 'id' | 'inProgress'>;
