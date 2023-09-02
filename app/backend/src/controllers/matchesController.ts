@@ -6,11 +6,6 @@ export default class MatchesController {
     private matchesService = new MatchesService(),
   ) { }
 
-  // public async findAllMatches(_req: Request, res: Response) {
-  //   const serviceResponse = await this.matchesService.findAllMatches();
-  //   return res.status(200).json(serviceResponse.data);
-  // }
-
   public async findAllByQuery(req: Request, res: Response) {
     const { inProgress } = req.query;
 
@@ -23,6 +18,12 @@ export default class MatchesController {
       return res.status(200).json(serviceResponse.data);
     }
     const serviceResponse = await this.matchesService.findAllMatches();
+    return res.status(200).json(serviceResponse.data);
+  }
+
+  public async finishMatch(req: Request, res: Response) {
+    const { id } = req.params;
+    const serviceResponse = await this.matchesService.finishMatch(Number(id));
     return res.status(200).json(serviceResponse.data);
   }
 }

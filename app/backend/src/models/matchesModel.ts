@@ -33,4 +33,11 @@ export default class MatchesModel implements IMatchesModel {
     });
     return returnInProgressMatche;
   }
+
+  public async finishMatch(id: number) {
+    await this.model.update(
+      { inProgress: 0 },
+      { where: { id } },
+    );
+  }
 }
