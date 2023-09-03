@@ -44,7 +44,15 @@ export default class MatchesController {
         message: 'It is not possible to create a match with two equal teams',
       });
     }
+    // Outra forma de fazer:
     // const arrayTeams = [homeTeamId, awayTeamId];
+    // const teamsExist = await Promise
+    //   .all(arrayTeams.map((team) => this.teamsService.getTeamsById(team)));
+
+    // if (teamsExist.some(({ status }) => status === 'NOT_FOUND')) {
+    //   return res.status(404).json({ message: 'There is no team with such id!' });
+    // }
+
     const awayTeamExist = await this.teamsService.getTeamsById(awayTeamId);
     const homeTeamExist = await this.teamsService.getTeamsById(homeTeamId);
     if (awayTeamExist.status === 'NOT_FOUND' || homeTeamExist.status === 'NOT_FOUND') {

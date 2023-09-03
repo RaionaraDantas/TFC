@@ -13,6 +13,12 @@ const teamsList = [
   },
 ]
 
+const teamById = {
+  "id": 1,
+  "teamName": "Avaí/Kindermann"
+}
+
 export default {
   teamsList,
+  teamById,
 }
