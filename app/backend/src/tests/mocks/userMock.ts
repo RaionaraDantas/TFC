@@ -9,8 +9,8 @@ const nullPassword = {
 }
 
 const validateLogin = {
-  "email": "admin@admin.com",
-  "password": "secret_admin"
+  email: "admin@admin.com",
+  password: "secret_admin"
 }
 
 const token = {
