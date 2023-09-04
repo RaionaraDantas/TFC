@@ -8,18 +8,17 @@ class Validation {
     if (!tokenBearer) {
       return res.status(401).json({ message: 'Token not found' });
     }
-    const token = tokenBearer.split(' ')[1];
+    const token = tokenBearer.split(' ')[1] || tokenBearer;
 
     console.log(token);
 
     const validToken = JWT.verify(token);
-    req.body.user = validToken;
-
     console.log(validToken);
 
     if (validToken === 'Token must be a valid token') {
       return res.status(401).json({ message: validToken });
     }
+    req.body.user = validToken;
     // try {
 
     // } catch (error) {
@@ -41,7 +40,7 @@ class Validation {
     if (password.length < MAX_PASSWORD_LENGTH) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-    return next();
+    next();
   }
 }
 

@@ -24,18 +24,27 @@ Users.init({
     primaryKey: true,
     autoIncrement: true,
   },
-  username: DataTypes.STRING,
-  role: DataTypes.STRING,
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
-  password: DataTypes.STRING,
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 }, {
   sequelize: db,
-  modelName: 'User',
-  tableName: 'users',
+  modelName: 'users',
+  // tableName: 'users',
   timestamps: false,
 });
 

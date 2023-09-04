@@ -8,9 +8,10 @@ import { app } from '../app';
 import nullEmail from './mocks/userMock';
 import nullPassword from './mocks/userMock';
 import user from './mocks/userMock';
+import UsersModel from '../models/UsersModel';
 import token from './mocks/userMock';
 // import validateLogin from './mocks/userMock';
-import UsersModel from '../database/models/SequelizeUsersModel';
+import sequelizeUsersModel from '../database/models/SequelizeUsersModel';
 import JWT from '../utils/JWT';
 
 
@@ -38,8 +39,8 @@ describe('Testando a rota user', () => {
   });
   
   it.skip('Retorna token quando login efetuado com sucesso', async function() {
-    sinon.stub(UsersModel, 'findOne').resolves(user as any);
-    sinon.stub(JWT, 'sign').returns(token.token as any);
+    sinon.stub(sequelizeUsersModel, 'findOne').resolves(user as any);
+    sinon.stub(JWT, 'sign').returns('validate token');
     
     const response = await chai.request(app).post('/login').send({
       email: "admin@admin.com",
@@ -47,7 +48,17 @@ describe('Testando a rota user', () => {
     });
     
     expect(response.status).to.equal(200);
-    expect(response.body).to.deep.equal(token);
+    expect(response.body).to.deep.equal({ token: 'validate token' });
+  });
+
+  it.skip('Retorna a role do usuário', async function() {
+    sinon.stub(sequelizeUsersModel, 'findOne').resolves(user as any);
+    sinon.stub(JWT, 'verify').returns({ email: 'admin@admin.com', iat: 1693668878, exp: 1693672478 });
+    
+    const response = await chai.request(app).get('/login/role').set('authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY5Mzc4OTc0OCwiZXhwIjoxNjkzODc2MTQ4fQ.YGJH4klj7_YYqmgd_oPRHYJpugpLkR9aOuiEKmTNAZo');
+    
+    expect(response.status).to.equal(200);
+    expect(response.body).to.deep.equal({ role: 'admin' });
   });
 
   afterEach(sinon.restore);
