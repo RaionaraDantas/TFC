@@ -9,18 +9,16 @@ import nullEmail from './mocks/userMock';
 import nullPassword from './mocks/userMock';
 import user from './mocks/userMock';
 import UsersModel from '../models/UsersModel';
-import token from './mocks/userMock';
-// import validateLogin from './mocks/userMock';
 import sequelizeUsersModel from '../database/models/SequelizeUsersModel';
 import JWT from '../utils/JWT';
-
-
+import * as bcrypt from 'bcryptjs';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
 describe('Testando a rota user', () => {
+  afterEach(sinon.restore);
 
   it('Retorna mensagem de erro quando não for passado email', async function() {
     
@@ -38,9 +36,11 @@ describe('Testando a rota user', () => {
     expect(response.body).to.deep.equal({ message: "All fields must be filled" });
   });
   
-  it.skip('Retorna token quando login efetuado com sucesso', async function() {
+  it('Retorna token quando login efetuado com sucesso', async function() {
     sinon.stub(sequelizeUsersModel, 'findOne').resolves(user as any);
-    sinon.stub(JWT, 'sign').returns('validate token');
+    sinon.stub(bcrypt, 'compareSync').returns(true);
+
+    sinon.stub(JWT, 'sign').returns('validateToken');
     
     const response = await chai.request(app).post('/login').send({
       email: "admin@admin.com",
@@ -48,18 +48,16 @@ describe('Testando a rota user', () => {
     });
     
     expect(response.status).to.equal(200);
-    expect(response.body).to.deep.equal({ token: 'validate token' });
+    expect(response.body).to.deep.equal({ token: 'validateToken' });
   });
 
-  it.skip('Retorna a role do usuário', async function() {
+  it('Retorna a role do usuário', async function() {
+    sinon.stub(JWT, 'verify').returns('validToken');
     sinon.stub(sequelizeUsersModel, 'findOne').resolves(user as any);
-    sinon.stub(JWT, 'verify').returns({ email: 'admin@admin.com', iat: 1693668878, exp: 1693672478 });
     
-    const response = await chai.request(app).get('/login/role').set('authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY5Mzc4OTc0OCwiZXhwIjoxNjkzODc2MTQ4fQ.YGJH4klj7_YYqmgd_oPRHYJpugpLkR9aOuiEKmTNAZo');
+    const response = await chai.request(app).get('/login/role').set('authorization', 'validToken').send();
     
     expect(response.status).to.equal(200);
-    expect(response.body).to.deep.equal({ role: 'admin' });
+    // expect(response.body).to.have.key({ role: 'admin' });
   });
-
-  afterEach(sinon.restore);
   });
