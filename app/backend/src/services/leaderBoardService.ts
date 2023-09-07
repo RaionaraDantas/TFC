@@ -15,6 +15,7 @@ export default class leaderBoardService {
     goalsFavor: 0,
     goalsOwn: 0,
     goalsBalance: 0,
+    efficiency: 0,
   };
 
   constructor(
@@ -22,29 +23,51 @@ export default class leaderBoardService {
   ) {}
 
   private static calculateStatus(team: ITeamsWithMatches): IPotential {
-    const teamsOfStatus = { ...leaderBoardService.leaderBoardTemplate };
+    const teamsOfStatus = leaderBoardService.test(team);
     teamsOfStatus.name = team.teamName;
     teamsOfStatus.totalGames = team.matchesHome.length;
-    team.matchesHome.forEach((match) => {
-      teamsOfStatus.goalsFavor += match.homeTeamGoals;
-      teamsOfStatus.goalsOwn += match.awayTeamGoals;
-      if (match.homeTeamGoals > match.awayTeamGoals) {
-        teamsOfStatus.totalPoints += 3;
-        teamsOfStatus.totalVictories += 1;
-      }
-      if (match.homeTeamGoals < match.awayTeamGoals) { teamsOfStatus.totalLosses += 1; }
-      if (match.homeTeamGoals === match.awayTeamGoals) {
-        teamsOfStatus.totalDraws += 1;
-        teamsOfStatus.totalPoints += 1;
-      }
-    });
     teamsOfStatus.goalsBalance = teamsOfStatus.goalsFavor - teamsOfStatus.goalsOwn;
+    teamsOfStatus.efficiency = +((teamsOfStatus.totalPoints
+      / (teamsOfStatus.totalGames * 3)) * 100).toFixed(2);
     return teamsOfStatus;
   }
 
   public async potentialTeamsHome(): Promise<ServiceResponseType<IPotential[]>> {
     const allTeams = await this.teamsModel.teamsWithMatches() as ITeamsWithMatches[];
     const potencialOfTeams = allTeams.map(leaderBoardService.calculateStatus);
-    return { status: 'SUCCESSFUL', data: potencialOfTeams };
+    return { status: 'SUCCESSFUL', data: leaderBoardService.orderTeams(potencialOfTeams) };
+  }
+
+  private static test(team: ITeamsWithMatches): IPotential {
+    return team.matchesHome.reduce((acc, match) => {
+      acc.goalsFavor += match.homeTeamGoals;
+      acc.goalsOwn += match.awayTeamGoals;
+      if (match.homeTeamGoals > match.awayTeamGoals) {
+        acc.totalPoints += 3;
+        acc.totalVictories += 1;
+      }
+      if (match.homeTeamGoals < match.awayTeamGoals) { acc.totalLosses += 1; }
+      if (match.homeTeamGoals === match.awayTeamGoals) {
+        acc.totalDraws += 1;
+        acc.totalPoints += 1;
+      }
+      return acc;
+    }, { ...leaderBoardService.leaderBoardTemplate });
+  }
+
+  static orderTeams(teams:IPotential[]) {
+    const order = teams.sort((a, b): number => {
+      if (b.totalPoints !== a.totalPoints) {
+        return b.totalPoints - a.totalPoints;
+      }
+      if (b.totalVictories !== a.totalVictories) {
+        return b.totalVictories - a.totalVictories;
+      }
+      if (b.goalsBalance !== a.goalsBalance) {
+        return b.goalsBalance - a.goalsBalance;
+      }
+      return b.goalsFavor - a.goalsFavor;
+    });
+    return order;
   }
 }

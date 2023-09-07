@@ -1,4 +1,4 @@
-export default interface IPerformance {
+export default interface IPotential {
   name: string;
   totalPoints: number;
   totalGames: number;
@@ -8,4 +8,5 @@ export default interface IPerformance {
   goalsFavor: number;
   goalsOwn: number;
   goalsBalance: number;
+  efficiency?: number;
 }
